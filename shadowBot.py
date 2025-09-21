@@ -1,10 +1,11 @@
 """
-assistant.py
+ShadowBot.py
 A simple Tkinter-based voice assistant with a typed-command fallback.
 
-Dependencies:
+Users need to do:
     pip install speechrecognition pyttsx3 wikipedia pyjokes
-(Also install PyAudio for microphone input if available)
+
+                                                                        - K.Sohith
 """
 
 import speech_recognition as sr
@@ -16,18 +17,17 @@ import pyjokes
 import tkinter as tk
 from threading import Thread
 
-# -------------------------
-# 1) Initialize engines
-# -------------------------
-listener = sr.Recognizer()       # Speech recognizer
-engine = pyttsx3.init()          # Text-to-speech engine
+
+# 1) engine
+
+listener = sr.Recognizer()       
+engine = pyttsx3.init()         
 
 
-# -------------------------
-# 2) Speak helper
-# -------------------------
+# 2) speaking
+
 def talk(text):
-    """Speak text aloud and append to the GUI chat box."""
+ 
     try:
         engine.say(text)
         engine.runAndWait()
@@ -37,14 +37,11 @@ def talk(text):
     text_output.see(tk.END)
 
 
-# -------------------------
-# 3) Microphone listener
-# -------------------------
+
+# 3) taking commands
+
 def take_command():
-    """
-    Listen from the microphone and return recognized lowercase text.
-    Returns empty string on error.
-    """
+   
     try:
         with sr.Microphone() as source:
             listener.adjust_for_ambient_noise(source, duration=0.5)
@@ -66,11 +63,11 @@ def take_command():
         return ""
 
 
-# -------------------------
-# 4) Command processor
-# -------------------------
+
+# 4) executing
+
 def process_command(command):
-    """Process text and perform actions."""
+  
     if not command:
         talk("I didn't catch anything. Try again.")
         return
@@ -110,24 +107,23 @@ def process_command(command):
         talk("Sorry, I didn't get that. Try commands like 'time', 'open youtube', 'wikipedia <topic>', or 'joke'.")
 
 
-# -------------------------
-# 5) Threaded functions
-# -------------------------
+
+# 5) GUI glich solving
+
 def run_assistant():
-    """Run listening and processing in a background thread."""
     command = take_command()
     process_command(command)
 
 def start_listening_thread():
-    """Start microphone listening in a thread so GUI doesn’t freeze."""
+
     Thread(target=run_assistant, daemon=True).start()
 
 
-# -------------------------
-# 6) Typed command handler
-# -------------------------
+
+# 6) typed commands
+
 def handle_typed_command():
-    """Get text from the entry box and process it."""
+
     cmd = type_entry.get().strip()
     if cmd:
         text_output.insert(tk.END, "You (typed): " + cmd + "\n")
@@ -136,9 +132,8 @@ def handle_typed_command():
         Thread(target=process_command, args=(cmd,), daemon=True).start()
 
 
-# -------------------------
 # 7) Tkinter GUI setup
-# -------------------------
+
 root = tk.Tk()
 root.title("AI Voice Assistant")
 root.geometry("520x460")
@@ -162,12 +157,12 @@ send_btn = tk.Button(controls_frame, text="Send (type)", command=handle_typed_co
 send_btn.grid(row=0, column=2, padx=6)
 
 
-# -------------------------
-# 8) Greeting
-# -------------------------
+# 8) greetings
+
 def initial_greeting():
     talk("Hello, I am your assistant. Click Speak to start or type a command.")
 
 Thread(target=initial_greeting, daemon=True).start()
 
 root.mainloop()
+
