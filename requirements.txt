@@ -1,0 +1,7 @@
+#libraries :
+  speechrecognition
+  pyttsx3
+  wikipedia
+  pyjokes
+
+pip install -r requirements.txt
